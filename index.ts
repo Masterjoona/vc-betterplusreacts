@@ -15,7 +15,7 @@ export default definePlugin({
     description: "The amount of plus before :emoji: is the message to add it to",
     patches: [
         {
-            find: "searchReplace",
+            find: ".SLASH_COMMAND_USED,",
             replacement: [
                 {
                     match: /\\\+/,
@@ -55,7 +55,7 @@ export default definePlugin({
                 },
                 {
                     match: /\i\.\i\)\.concat(?<=return.{18,24})/,
-                    replace: "VcPlusReactions).concat"
+                    replace: "VcPlusReactions||'+:').concat"
                 }
             ]
         }
