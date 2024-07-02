@@ -42,7 +42,7 @@ export default definePlugin({
                 },
                 {
                     match: /\.queryText}\);/,
-                    replace: ".queryText,VcPlusReactions:this.props.currentWord.split(':')[0]+':'});"
+                    replace: ".queryText,VcBetterPlusReacts:this.props.currentWord.split(':')[0]+':'});"
                 }
             ]
         },
@@ -51,11 +51,11 @@ export default definePlugin({
             replacement:[
                 {
                     match: /,options:\i/,
-                    replace: "$&,VcPlusReactions:VcPlusReactions"
+                    replace: "$&,VcBetterPlusReacts:VcBetterPlusReacts"
                 },
                 {
                     match: /\i\.\i\)\.concat(?<=return.{18,24})/,
-                    replace: "VcPlusReactions||'+:').concat"
+                    replace: "VcBetterPlusReacts||'+:').concat"
                 }
             ]
         }
