@@ -5,6 +5,9 @@
  */
 
 import definePlugin from "@utils/types";
+import { findByPropsLazy } from "@webpack";
+
+const { getMessages } = findByPropsLazy("getMessages");
 
 export default definePlugin({
     name: "BetterPlusReacts",
@@ -27,37 +30,33 @@ export default definePlugin({
                 },
                 {
                     match: /=(\i\.\i\.getMessages\(\i\.id\))\.last\(\)(?=.{78,85}.getByName\((\i)\.)/,
-                    replace: "=$1.getByIndex($1.length - $2.split('+').length + 1)"
+                    replace: "=$self.getMsgReference()"
                 }
             ]
         },
         {
             find: "this.props.activeCommandOption,",
             replacement:[
-                // Activate auto complete for multiple plusses
-                // and carry the amount of plusses to the below patch
+                // Enable auto complete for multiple plusses
+                // and set the message reference
                 {
                     match: /:this.props.currentWord/,
                     replace: "$&.replace(/^\\++/, '+')"
                 },
                 {
-                    match: /\.queryText}\);/,
-                    replace: ".queryText,VcBetterPlusReacts:this.props.currentWord.split(':')[0]+':'});"
+                    match: /this.props.editorRef.current\)return;/,
+                    replace: "$&$self.setMsgReference(this.props.currentWord,this.props.channel.id);"
                 }
             ]
         },
-        {
-            find: ".Messages.REACTIONS_MATCHING,",
-            replacement:[
-                {
-                    match: /,options:\i/,
-                    replace: "$&,VcBetterPlusReacts:VcBetterPlusReacts"
-                },
-                {
-                    match: /\i\.\i\)\.concat(?<=return.{18,24})/,
-                    replace: "VcBetterPlusReacts||'+:').concat"
-                }
-            ]
-        }
-    ]
+    ],
+    message: null,
+    getMsgReference() {
+        const { message } = this;
+        this.message = null;
+        return message;
+    },
+    setMsgReference(plusses: string, channelId: string) {
+        this.message = getMessages(channelId).getByIndex(getMessages(channelId).length - plusses.split("+").length + 1);
+    }
 });
