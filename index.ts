@@ -45,7 +45,7 @@ export default definePlugin({
                 },
                 {
                     match: /this.props.editorRef.current\)return;/,
-                    replace: "$&$self.setMsgReference(this.props.currentWord,this.props.channel.id);"
+                    replace: "$&$self.setMsgReference(this.props.currentWord.split(':')[0],this.props.channel.id);"
                 }
             ]
         },
